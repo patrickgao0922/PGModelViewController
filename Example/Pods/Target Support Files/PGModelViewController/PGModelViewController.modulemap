@@ -1,0 +1,6 @@
+framework module PGModelViewController {
+  umbrella header "PGModelViewController-umbrella.h"
+
+  export *
+  module * { export * }
+}
