@@ -37,6 +37,7 @@ class ViewController: UIViewController {
         case .iosNativeMail:
             let controller = segue.destination as! IOSNativeMailViewController
             controller.transitioningDelegate = pgModelViewControllerDelegate
+            controller.presentationStyle = .iOSNativeMail
         }
     }
 

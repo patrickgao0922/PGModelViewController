@@ -99,6 +99,8 @@
 		8ED2049ABDC6E9F8602C694E51C4A189 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0899F1B4CA18747F7A62B6CA14F9ED /* Configuration.swift */; };
 		91D0138ACFAD733E4061F12E450C336C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50FBC47DA706DBF982E54AA5ACC39EC9 /* Foundation.framework */; };
 		91D400CC851F516E785B032662E4FDD8 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70D8AC5990C544716D52E500CC8B75F0 /* Nimble.framework */; };
+		961175472033981D00FF10C6 /* Animators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961175462033981D00FF10C6 /* Animators.swift */; };
+		961175482033986E00FF10C6 /* Animators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961175462033981D00FF10C6 /* Animators.swift */; };
 		96132E7432F8DD315A88A07C6B4F9C72 /* NMBStringify.h in Headers */ = {isa = PBXBuildFile; fileRef = E43274BDDF946146643879824D00EC31 /* NMBStringify.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9673CF780F48C8E4EC2A331717B1F67C /* FBSnapshotTestCase.h in Headers */ = {isa = PBXBuildFile; fileRef = C3D41F703F26B177ACAAD1FFB6C0AAE1 /* FBSnapshotTestCase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		968DE44720327C7300F4BDAC /* PGModelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968DE44620327C7300F4BDAC /* PGModelViewController.swift */; };
@@ -351,6 +353,7 @@
 		918657EA4E3C6E897CB251D29FC692A0 /* UIImage+Compare.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Compare.m"; path = "FBSnapshotTestCase/Categories/UIImage+Compare.m"; sourceTree = "<group>"; };
 		92C477BB22B1FAA8922E41B637033B8B /* Pods-PGModelViewController_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-PGModelViewController_Example-resources.sh"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		961175462033981D00FF10C6 /* Animators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animators.swift; sourceTree = "<group>"; };
 		968DE44620327C7300F4BDAC /* PGModelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PGModelViewController.swift; path = PGModelViewController/PGModelViewController.swift; sourceTree = "<group>"; };
 		968DE44920327CBB00F4BDAC /* PGModelViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGModelViewControllerDelegate.swift; sourceTree = "<group>"; };
 		968DE44C20327CFD00F4BDAC /* PGPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGPresentationController.swift; sourceTree = "<group>"; };
@@ -691,6 +694,7 @@
 				F68183EEB767C4711A0FC652CFE60889 /* README.md */,
 				968DE44920327CBB00F4BDAC /* PGModelViewControllerDelegate.swift */,
 				968DE44C20327CFD00F4BDAC /* PGPresentationController.swift */,
+				961175462033981D00FF10C6 /* Animators.swift */,
 			);
 			name = Pod;
 			sourceTree = "<group>";
@@ -1130,6 +1134,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				961175472033981D00FF10C6 /* Animators.swift in Sources */,
 				968DE44E20327CFD00F4BDAC /* PGPresentationController.swift in Sources */,
 				538BCA9E3BF74CDCC792EBEABA0D8476 /* PGModelViewController-dummy.m in Sources */,
 				968DE44820327C7300F4BDAC /* PGModelViewController.swift in Sources */,
@@ -1233,6 +1238,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				961175482033986E00FF10C6 /* Animators.swift in Sources */,
 				506D761F91EC3583789A837C559972FE /* FBSnapshotTestCase-dummy.m in Sources */,
 				968DE44720327C7300F4BDAC /* PGModelViewController.swift in Sources */,
 				BE14F2198CDB0DAD98A567981D21C7A1 /* FBSnapshotTestCase.m in Sources */,
