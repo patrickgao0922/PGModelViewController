@@ -14,6 +14,7 @@ public class PGPresentationController: UIPresentationController {
     fileprivate var handleView:UIView!
     fileprivate var interactor:Interactor!
     
+    
     override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
         
@@ -23,45 +24,29 @@ public class PGPresentationController: UIPresentationController {
     
     /// When the transition will begin
     override public func presentationTransitionWillBegin() {
-        //        let containerView = self.containerView
-        //        super.presentationTransitionWillBegin()
-        self.interactor = (self.presentedViewController.transitioningDelegate as! PGModelViewControllerDelegate).interactor
-        dimmingView.frame = self.containerView!.frame
-        self.containerView?.insertSubview(dimmingView, at: 0)
-        let presentedViewController = self.presentedViewController
-        /// Config dimming view
-        setupHandleView()
-        // Constraints
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
-        // Layout handleView
-        if #available(iOS 11.0, *) {
-            self.presentedView?.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
-        } else {
-            // Fallback on earlier versions
-            //            drawTopCornerRadius()
+        super.presentationTransitionWillBegin()
+        let pgPresentedVC = self.presentedViewController as! PGModelViewController
+        switch pgPresentedVC.presentationStyle {
+        case .iOSNativeMail:
+            iOSNativeMailPresentationTransitionWillBegin()
+        case .sideMenu:
+            sideMenuPresentationTransitionWillBegin()
         }
-        guard let coordinator = presentedViewController.transitionCoordinator else {
-            dimmingView.alpha = 1
-            self.presentedView?.layer.cornerRadius = 10
-            
-            return
-        }
-        
-        coordinator.animate(alongsideTransition: { _ in
-            self.dimmingView.alpha = 1
-            self.presentedView?.layer.cornerRadius = 10
-            self.presentingViewController.view!.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-        })
-        
-        
     }
     
     override public func dismissalTransitionWillBegin() {
         super.dismissalTransitionWillBegin()
+        
+        let pgPresentedVC = self.presentedViewController as! PGModelViewController
+        
         guard let coordinator = presentedViewController.transitionCoordinator else {
-            dimmingView.alpha = 0
-            self.presentedView?.layer.cornerRadius = 0
+            switch pgPresentedVC.presentationStyle {
+            case .iOSNativeMail:
+                iOSNativeMailDismissalTransitionWillBegin()
+            case .sideMenu:
+                sideMenuDismissalTransitionWillBegin()
+            }
+
             return
         }
         
@@ -103,6 +88,80 @@ fileprivate extension PGPresentationController {
         dimmingView.alpha = 0
         
         
+    }
+    
+    
+    func drawTopCornerRadius() {
+        let maskPath = UIBezierPath.init(roundedRect: self.presentedView!.bounds, byRoundingCorners:[.topLeft, .topRight], cornerRadii: CGSize.init(width: 10.0, height: 10.0))
+        let maskLayer = CAShapeLayer()
+        maskLayer.frame = self.presentedView!.bounds
+        maskLayer.path = maskPath.cgPath
+        self.presentedView!.layer.mask = maskLayer
+    }
+    
+    @objc
+    dynamic func handleTap(recognizer:UITapGestureRecognizer) {
+        presentingViewController.dismiss(animated: true)
+    }
+    
+    func commonPresentationBegin() {
+        self.dimmingView.alpha = 1
+        self.presentingViewController.view!.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+    }
+    
+    func commonDismissalBegin() {
+        dimmingView.alpha = 0
+        self.presentedView?.layer.cornerRadius = 0
+    }
+    
+}
+class Interactor:UIPercentDrivenInteractiveTransition {
+    var hasStarted = false
+    var shouldFinish = false
+}
+
+// MARK: - iOS Native Mail
+extension PGPresentationController {
+    func iOSNativeMailPresentationTransitionWillBegin() {
+        self.interactor = (self.presentedViewController.transitioningDelegate as! PGModelViewControllerDelegate).interactor
+        dimmingView.frame = self.containerView!.frame
+        self.containerView?.insertSubview(dimmingView, at: 0)
+        let presentedViewController = self.presentedViewController
+        /// Config dimming view
+        setupHandleView()
+        // Constraints
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
+        // Layout handleView
+        if #available(iOS 11.0, *) {
+            self.presentedView?.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
+        } else {
+            // Fallback on earlier versions
+            //            drawTopCornerRadius()
+        }
+        guard let coordinator = presentedViewController.transitionCoordinator else {
+            commonPresentationBegin()
+            self.presentedView?.layer.cornerRadius = 10
+            return
+        }
+        
+        coordinator.animate(alongsideTransition: { _ in
+            self.commonPresentationBegin()
+            self.presentedView?.layer.cornerRadius = 10
+        })
+    }
+    
+    func iOSNativeMailDismissalTransitionWillBegin() {
+        guard let coordinator = presentedViewController.transitionCoordinator else {
+            commonDismissalBegin()
+            self.presentedView?.layer.cornerRadius = 10
+            return
+        }
+        
+        coordinator.animate(alongsideTransition: { _ in
+            self.commonDismissalBegin()
+            self.presentedView?.layer.cornerRadius = 10
+        })
     }
     
     func setupHandleView() {
@@ -171,24 +230,42 @@ fileprivate extension PGPresentationController {
             break
         }
     }
-    
-    
-    func drawTopCornerRadius() {
-        let maskPath = UIBezierPath.init(roundedRect: self.presentedView!.bounds, byRoundingCorners:[.topLeft, .topRight], cornerRadii: CGSize.init(width: 10.0, height: 10.0))
-        let maskLayer = CAShapeLayer()
-        maskLayer.frame = self.presentedView!.bounds
-        maskLayer.path = maskPath.cgPath
-        self.presentedView!.layer.mask = maskLayer
-    }
-    
-    @objc
-    dynamic func handleTap(recognizer:UITapGestureRecognizer) {
-        presentingViewController.dismiss(animated: true)
-    }
-    
-    
 }
-class Interactor:UIPercentDrivenInteractiveTransition {
-    var hasStarted = false
-    var shouldFinish = false
+
+// MARK: - Side Menu
+extension PGPresentationController {
+    func sideMenuPresentationTransitionWillBegin() {
+        self.interactor = (self.presentedViewController.transitioningDelegate as! PGModelViewControllerDelegate).interactor
+        dimmingView.frame = self.containerView!.frame
+        self.containerView?.insertSubview(dimmingView, at: 0)
+        let presentedViewController = self.presentedViewController
+        /// Config dimming view
+        setupHandleView()
+        // Constraints
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
+        // Layout handleView
+        if #available(iOS 11.0, *) {
+            self.presentedView?.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
+        } else {
+            // Fallback on earlier versions
+            //            drawTopCornerRadius()
+        }
+        guard let coordinator = presentedViewController.transitionCoordinator else {
+            dimmingView.alpha = 1
+            self.presentedView?.layer.cornerRadius = 10
+            
+            return
+        }
+        
+        coordinator.animate(alongsideTransition: { _ in
+            self.dimmingView.alpha = 1
+            self.presentedView?.layer.cornerRadius = 10
+            self.presentingViewController.view!.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        })
+    }
+    
+    func sideMenuDismissalTransitionWillBegin() {
+        
+    }
 }
