@@ -7,23 +7,23 @@
 
 import UIKit
 
-class PGModelViewControllerDelegate: NSObject {
+public class PGModelViewControllerDelegate: NSObject {
     var interactor = Interactor()
 }
 
 extension PGModelViewControllerDelegate:UIViewControllerTransitioningDelegate {
     
     
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        let presentationController = PageSheetPresentationController(presentedViewController: presented, presenting: presenting)
+    public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        let presentationController = PGPresentationController(presentedViewController: presented, presenting: presenting)
         return presentationController
     }
     
-    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         return interactor.hasStarted ? interactor : nil
     }
     
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return DismissAnimator(forDismissed:dismissed)
     }
 }
@@ -65,4 +65,8 @@ extension DismissAnimator : UIViewControllerAnimatedTransitioning {
         }
         )
     }
+}
+
+public enum PresentationStyle {
+    case iosNativeEmail
 }

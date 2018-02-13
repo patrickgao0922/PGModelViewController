@@ -8,7 +8,7 @@
 import UIKit
 
 
-class PGPresentationController: UIPresentationController {
+public class PGPresentationController: UIPresentationController {
     
     fileprivate var dimmingView:UIView!
     fileprivate var handleView:UIView!
@@ -22,7 +22,7 @@ class PGPresentationController: UIPresentationController {
     }
     
     /// When the transition will begin
-    override func presentationTransitionWillBegin() {
+    override public func presentationTransitionWillBegin() {
         //        let containerView = self.containerView
         //        super.presentationTransitionWillBegin()
         self.interactor = (self.presentedViewController.transitioningDelegate as! PGModelViewControllerDelegate).interactor
@@ -57,7 +57,7 @@ class PGPresentationController: UIPresentationController {
         
     }
     
-    override func dismissalTransitionWillBegin() {
+    override public func dismissalTransitionWillBegin() {
         super.dismissalTransitionWillBegin()
         guard let coordinator = presentedViewController.transitionCoordinator else {
             dimmingView.alpha = 0
@@ -74,17 +74,17 @@ class PGPresentationController: UIPresentationController {
         }, completion: nil)
     }
     
-    override func presentationTransitionDidEnd(_ completed: Bool) {
+    override public func presentationTransitionDidEnd(_ completed: Bool) {
         if (!completed) {
             self.dimmingView.removeFromSuperview()
         }
     }
     
-    override func containerViewDidLayoutSubviews() {
+    override public func containerViewDidLayoutSubviews() {
         presentedView?.frame = self.frameOfPresentedViewInContainerView
     }
     
-    override var frameOfPresentedViewInContainerView: CGRect {
+    override public var frameOfPresentedViewInContainerView: CGRect {
         var frame:CGRect = .zero
         
         frame.size = size(forChildContentContainer: presentedViewController, withParentContainerSize: containerView!.bounds.size)
@@ -156,11 +156,9 @@ fileprivate extension PGPresentationController {
         case .began:
             interactor.hasStarted = true
             //            dismiss
-            print("Guster started")
             self.presentedViewController.dismiss(animated: true, completion: nil)
         case .changed:
             interactor.shouldFinish = progress > percentThreshold
-            print(progress)
             interactor.update(progress)
         case .cancelled:
             interactor.hasStarted = false
