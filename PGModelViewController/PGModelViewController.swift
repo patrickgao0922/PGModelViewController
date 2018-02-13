@@ -8,11 +8,16 @@
 import UIKit
 
 open class PGModelViewController: UIViewController {
+    public enum PresentationDirection {
+        case left
+        case right
+    }
     public enum PresentationStyle {
         case iOSNativeMail
         case sideMenu
     }
     public var presentationStyle = PresentationStyle.iOSNativeMail
+    public var direction = PresentationDirection.left
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)

@@ -86,8 +86,8 @@ fileprivate extension PGPresentationController {
         dimmingView.translatesAutoresizingMaskIntoConstraints = false
         dimmingView.backgroundColor = UIColor(white: 0, alpha: 0.5)
         dimmingView.alpha = 0
-        
-        
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(recognizer:)))
+        dimmingView.addGestureRecognizer(recognizer)
     }
     
     
@@ -235,37 +235,41 @@ extension PGPresentationController {
 // MARK: - Side Menu
 extension PGPresentationController {
     func sideMenuPresentationTransitionWillBegin() {
-        self.interactor = (self.presentedViewController.transitioningDelegate as! PGModelViewControllerDelegate).interactor
+//        self.interactor = (self.presentedViewController.transitioningDelegate as! PGModelViewControllerDelegate).interactor
         dimmingView.frame = self.containerView!.frame
         self.containerView?.insertSubview(dimmingView, at: 0)
         let presentedViewController = self.presentedViewController
         /// Config dimming view
-        setupHandleView()
         // Constraints
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
         NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
         // Layout handleView
-        if #available(iOS 11.0, *) {
-            self.presentedView?.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
-        } else {
-            // Fallback on earlier versions
-            //            drawTopCornerRadius()
-        }
+//        if #available(iOS 11.0, *) {
+//            self.presentedView?.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
+//        } else {
+//            // Fallback on earlier versions
+//            //            drawTopCornerRadius()
+//        }
         guard let coordinator = presentedViewController.transitionCoordinator else {
-            dimmingView.alpha = 1
-            self.presentedView?.layer.cornerRadius = 10
+            commonPresentationBegin()
             
             return
         }
         
         coordinator.animate(alongsideTransition: { _ in
-            self.dimmingView.alpha = 1
-            self.presentedView?.layer.cornerRadius = 10
-            self.presentingViewController.view!.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+            self.commonPresentationBegin()
         })
     }
     
     func sideMenuDismissalTransitionWillBegin() {
+        guard let coordinator = presentedViewController.transitionCoordinator else {
+            commonDismissalBegin()
+            
+            return
+        }
         
+        coordinator.animate(alongsideTransition: { _ in
+            self.commonDismissalBegin()
+        })
     }
 }

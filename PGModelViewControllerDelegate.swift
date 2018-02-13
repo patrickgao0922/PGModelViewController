@@ -23,6 +23,17 @@ extension PGModelViewControllerDelegate:UIViewControllerTransitioningDelegate {
         return interactor.hasStarted ? interactor : nil
     }
     
+    public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        let presentedVC = presented as! PGModelViewController
+        switch presentedVC.presentationStyle {
+        case .sideMenu:
+            return SideMenuPresentationAnimator(forPresented: presented)
+        default:
+            return nil
+        }
+        
+    }
+    
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let dismissedVC = dismissed as! PGModelViewController
         switch dismissedVC.presentationStyle {

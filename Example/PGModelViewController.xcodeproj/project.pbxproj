@@ -15,6 +15,7 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		6E697DE399EDA8695B3FC78B /* Pods_PGModelViewController_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED250D858A2A21A7F740E4E6 /* Pods_PGModelViewController_Example.framework */; };
+		9611754A2033AD5800FF10C6 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961175492033AD5800FF10C6 /* SideMenuViewController.swift */; };
 		968DE4502032911000F4BDAC /* iOSNativeMailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 968DE44F2032911000F4BDAC /* iOSNativeMailViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,7 @@
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		72458BBC31C0A956E810A722 /* Pods-PGModelViewController_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PGModelViewController_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PGModelViewController_Example/Pods-PGModelViewController_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		8A582EBBB1AB046920ADA55C /* PGModelViewController.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = PGModelViewController.podspec; path = ../PGModelViewController.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		961175492033AD5800FF10C6 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		968DE44F2032911000F4BDAC /* iOSNativeMailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSNativeMailViewController.swift; sourceTree = "<group>"; };
 		978F2A18C116E0DE861C9CB5 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		980CD3625DAFED32E3068BF7 /* Pods-PGModelViewController_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PGModelViewController_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-PGModelViewController_Example/Pods-PGModelViewController_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 				968DE44F2032911000F4BDAC /* iOSNativeMailViewController.swift */,
+				961175492033AD5800FF10C6 /* SideMenuViewController.swift */,
 			);
 			name = "Example for PGModelViewController";
 			path = PGModelViewController;
@@ -384,6 +387,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9611754A2033AD5800FF10C6 /* SideMenuViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				968DE4502032911000F4BDAC /* iOSNativeMailViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
