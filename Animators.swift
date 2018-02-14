@@ -27,10 +27,10 @@ extension SideMenuPresentationAnimator:UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let fromView = transitionContext.view(forKey: .from) // from view
-            else {
-                return
-        }
+//        guard let fromView = transitionContext.view(forKey: .from) // from view
+//            else {
+//                return
+//        }
         let containerView = transitionContext.containerView // Container View
         
         // Set up frames for animations
@@ -46,6 +46,7 @@ extension SideMenuPresentationAnimator:UIViewControllerAnimatedTransitioning {
             presentedViewFinalFrame = CGRect(x: 0, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
         }
         presentedVC.view.frame = presentedViewStartFrame
+        containerView.addSubview(self.presentedVC.view)
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             animations: {
@@ -61,11 +62,11 @@ extension SideMenuPresentationAnimator:UIViewControllerAnimatedTransitioning {
 
 /// Dismissal
 class DismissedViewControllerAnimator : NSObject {
-    var dismissedVC:PGModelViewController!
+    var presentedVC:PGModelViewController!
     var transitionDuration:TimeInterval!
     init(forDismissed dismissed: UIViewController) {
         super.init()
-        self.dismissedVC = dismissed as! PGModelViewController
+        self.presentedVC = dismissed as! PGModelViewController
         self.transitionDuration = 0.6
     }
 }
@@ -92,7 +93,7 @@ extension iOSNativeMailDismissAnimator : UIViewControllerAnimatedTransitioning {
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             animations: {
-                self.dismissedVC.view.frame = fromViewFinalFrame
+                self.presentedVC.view.frame = fromViewFinalFrame
         },
             completion: { finished in
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
@@ -110,5 +111,29 @@ extension SideMenuDismissAnimator:UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView // Container View
+        
+        // Set up frames for animations
+        //        let containerFrame = containerView.frame
+        var presentedViewFinalFrame = CGRect(x: 0, y: -containerView.frame.size.width / 2, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
+        var presentedViewStartFrame = CGRect(x: 0, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
+        switch presentedVC.direction {
+        case .left:
+            presentedViewFinalFrame = CGRect(x: -containerView.frame.size.width / 2, y:0 , width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
+            presentedViewStartFrame = CGRect(x: 0, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
+        case .right:
+            presentedViewFinalFrame = CGRect(x: containerView.frame.size.width, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
+            presentedViewStartFrame = CGRect(x: 0, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
+        }
+        presentedVC.view.frame = presentedViewStartFrame
+        UIView.animate(
+            withDuration: transitionDuration(using: transitionContext),
+            animations: {
+                self.presentedVC.view.frame = presentedViewFinalFrame
+        },
+            completion: { finished in
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+        }
+        )
     }
 }

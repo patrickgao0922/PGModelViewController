@@ -17,14 +17,19 @@ public class PGPresentationController: UIPresentationController {
     
     override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
-        
         setupDimmingView()
-        
     }
     
     /// When the transition will begin
     override public func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
+        dimmingView.frame = self.containerView!.frame
+        self.containerView?.insertSubview(dimmingView, at: 0)
+        self.dimmingView.leadingAnchor.constraint(equalTo: containerView!.leadingAnchor).isActive = true
+        self.dimmingView.trailingAnchor.constraint(equalTo: containerView!.trailingAnchor).isActive = true
+        self.dimmingView.topAnchor.constraint(equalTo: containerView!.topAnchor).isActive = true
+        self.dimmingView.bottomAnchor.constraint(equalTo: containerView!.bottomAnchor).isActive = true
+        
         let pgPresentedVC = self.presentedViewController as! PGModelViewController
         switch pgPresentedVC.presentationStyle {
         case .iOSNativeMail:
@@ -70,13 +75,21 @@ public class PGPresentationController: UIPresentationController {
     }
     
     override public var frameOfPresentedViewInContainerView: CGRect {
-        var frame:CGRect = .zero
+        let presentedVC = self.presentedViewController as! PGModelViewController
+        switch presentedVC.presentationStyle
+        {
+        case .sideMenu:
+            return sideMenuFrame
+        default:
+            var frame:CGRect = .zero
+            
+            frame.size = size(forChildContentContainer: presentedViewController, withParentContainerSize: containerView!.bounds.size)
+            frame.size.height -= 40
+            
+            frame.origin.y = UIApplication.shared.statusBarFrame.height + 20
+            return frame
+        }
         
-        frame.size = size(forChildContentContainer: presentedViewController, withParentContainerSize: containerView!.bounds.size)
-        frame.size.height -= 40
-        
-        frame.origin.y = UIApplication.shared.statusBarFrame.height + 20
-        return frame
     }
 }
 
@@ -88,6 +101,7 @@ fileprivate extension PGPresentationController {
         dimmingView.alpha = 0
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(recognizer:)))
         dimmingView.addGestureRecognizer(recognizer)
+        
     }
     
     
@@ -101,7 +115,7 @@ fileprivate extension PGPresentationController {
     
     @objc
     dynamic func handleTap(recognizer:UITapGestureRecognizer) {
-        presentingViewController.dismiss(animated: true)
+        presentedViewController.dismiss(animated: true)
     }
     
     func commonPresentationBegin() {
@@ -124,14 +138,16 @@ class Interactor:UIPercentDrivenInteractiveTransition {
 extension PGPresentationController {
     func iOSNativeMailPresentationTransitionWillBegin() {
         self.interactor = (self.presentedViewController.transitioningDelegate as! PGModelViewControllerDelegate).interactor
-        dimmingView.frame = self.containerView!.frame
-        self.containerView?.insertSubview(dimmingView, at: 0)
+//        dimmingView.frame = self.containerView!.frame
+//        self.containerView?.insertSubview(dimmingView, at: 0)
         let presentedViewController = self.presentedViewController
         /// Config dimming view
         setupHandleView()
         // Constraints
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
+        
+        
+//        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
+//        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
         // Layout handleView
         if #available(iOS 11.0, *) {
             self.presentedView?.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
@@ -225,6 +241,7 @@ extension PGPresentationController {
         case .ended:
             interactor.hasStarted = false
             interactor.shouldFinish ? interactor.finish():interactor.cancel()
+//            interactor.shouldFinish ? interactor.cancel():interactor.cancel()
             
         default:
             break
@@ -234,15 +251,19 @@ extension PGPresentationController {
 
 // MARK: - Side Menu
 extension PGPresentationController {
+    var sideMenuFrame:CGRect {
+        var frame:CGRect = .zero
+        frame.size = CGSize(width: containerView!.frame.size.width / 2, height: containerView!.frame.size.height)
+        return frame
+    }
     func sideMenuPresentationTransitionWillBegin() {
 //        self.interactor = (self.presentedViewController.transitioningDelegate as! PGModelViewControllerDelegate).interactor
-        dimmingView.frame = self.containerView!.frame
-        self.containerView?.insertSubview(dimmingView, at: 0)
+        
         let presentedViewController = self.presentedViewController
         /// Config dimming view
         // Constraints
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
+//        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
+//        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
         // Layout handleView
 //        if #available(iOS 11.0, *) {
 //            self.presentedView?.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
