@@ -14,7 +14,7 @@ class PresentedViewControllerAnimator : NSObject {
     
     init(forPresented presented:UIViewController) {
         self.presentedVC = presented as! PGModelViewController
-        self.transitionDuration = 0.6
+        self.transitionDuration = 0.3
     }
 }
 
@@ -67,7 +67,7 @@ class DismissedViewControllerAnimator : NSObject {
     init(forDismissed dismissed: UIViewController) {
         super.init()
         self.presentedVC = dismissed as! PGModelViewController
-        self.transitionDuration = 0.6
+        self.transitionDuration = 0.3
     }
 }
 /// iOS Native Mail Animation
@@ -123,7 +123,7 @@ extension SideMenuDismissAnimator:UIViewControllerAnimatedTransitioning {
             presentedViewStartFrame = CGRect(x: 0, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
         case .right:
             presentedViewFinalFrame = CGRect(x: containerView.frame.size.width, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
-            presentedViewStartFrame = CGRect(x: 0, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
+            presentedViewStartFrame = CGRect(x: containerView.frame.size.width / 2, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
         }
         presentedVC.view.frame = presentedViewStartFrame
         UIView.animate(

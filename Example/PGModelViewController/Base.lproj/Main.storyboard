@@ -25,7 +25,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5w5-x6-xwO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="246" y="805"/>
+            <point key="canvasLocation" x="367" y="884"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
@@ -40,20 +40,27 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="orw-Vz-scM">
-                                <rect key="frame" x="130" y="303" width="114" height="60"/>
+                                <rect key="frame" x="125" y="288" width="124" height="90"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PxA-fg-BsV">
-                                        <rect key="frame" x="5" y="0.0" width="104" height="30"/>
+                                        <rect key="frame" x="10" y="0.0" width="104" height="30"/>
                                         <state key="normal" title="iOS Native Mail"/>
                                         <connections>
                                             <segue destination="3HE-07-0YT" kind="presentation" identifier="showIOSNatvieMailStyle" id="IRC-Up-iia"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f8i-kL-lYZ">
-                                        <rect key="frame" x="0.0" y="30" width="114" height="30"/>
+                                        <rect key="frame" x="5" y="30" width="114" height="30"/>
                                         <state key="normal" title="Side Menu (Left)"/>
                                         <connections>
                                             <segue destination="fhC-S1-xVc" kind="presentation" identifier="showSideMenuStyle" id="S2s-b2-SrT"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GQJ-fV-yVi">
+                                        <rect key="frame" x="0.0" y="60" width="124" height="30"/>
+                                        <state key="normal" title="Side Menu (Right)"/>
+                                        <connections>
+                                            <segue destination="fhC-S1-xVc" kind="presentation" identifier="showSideMenuStyle(Right)" id="IYG-mf-EtM"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -89,4 +96,7 @@
             <point key="canvasLocation" x="1054" y="134"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="IYG-mf-EtM"/>
+    </inferredMetricsTieBreakers>
 </document>

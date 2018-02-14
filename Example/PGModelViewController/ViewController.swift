@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     enum SegueIdentifier:String {
         case iosNativeMail = "showIOSNatvieMailStyle"
         case sideMenu = "showSideMenuStyle"
+        case sideMenuRight = "showSideMenuStyle(Right)"
     }
     
     var pgModelViewControllerDelegate:PGModelViewControllerDelegate!
@@ -45,7 +46,13 @@ class ViewController: UIViewController {
             controller.transitioningDelegate = pgModelViewControllerDelegate
             controller.presentationStyle = .sideMenu
             controller.direction = .left
+        case .sideMenuRight:
+            let controller = segue.destination as! SideMenuViewController
+            controller.transitioningDelegate = pgModelViewControllerDelegate
+            controller.presentationStyle = .sideMenu
+            controller.direction = .right
         }
+        
     }
 
 }

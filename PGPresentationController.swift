@@ -121,11 +121,13 @@ fileprivate extension PGPresentationController {
     func commonPresentationBegin() {
         self.dimmingView.alpha = 1
         self.presentingViewController.view!.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        UIApplication.shared.statusBarStyle = .lightContent
     }
     
     func commonDismissalBegin() {
         dimmingView.alpha = 0
         self.presentedView?.layer.cornerRadius = 0
+        UIApplication.shared.statusBarStyle = .default
     }
     
 }
@@ -252,8 +254,15 @@ extension PGPresentationController {
 // MARK: - Side Menu
 extension PGPresentationController {
     var sideMenuFrame:CGRect {
+        let presentedVC = self.presentedViewController as! PGModelViewController
         var frame:CGRect = .zero
-        frame.size = CGSize(width: containerView!.frame.size.width / 2, height: containerView!.frame.size.height)
+        switch presentedVC.direction {
+        case .left:
+            frame.size = CGSize(width: containerView!.frame.size.width / 2, height: containerView!.frame.size.height)
+        case .right:
+            frame.origin = CGPoint(x: containerView!.frame.size.width / 2, y: 0)
+            frame.size = CGSize(width: containerView!.frame.size.width / 2, height: containerView!.frame.size.height)
+        }
         return frame
     }
     func sideMenuPresentationTransitionWillBegin() {
