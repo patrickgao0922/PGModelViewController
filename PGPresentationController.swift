@@ -81,13 +81,8 @@ public class PGPresentationController: UIPresentationController {
         case .sideMenu:
             return sideMenuFrame
         default:
-            var frame:CGRect = .zero
             
-            frame.size = size(forChildContentContainer: presentedViewController, withParentContainerSize: containerView!.bounds.size)
-            frame.size.height -= 40
-            
-            frame.origin.y = UIApplication.shared.statusBarFrame.height + 20
-            return frame
+            return iOSNativeMailFrame
         }
         
     }
@@ -138,18 +133,19 @@ class Interactor:UIPercentDrivenInteractiveTransition {
 
 // MARK: - iOS Native Mail
 extension PGPresentationController {
+    var iOSNativeMailFrame:CGRect {
+        var frame:CGRect = .zero
+        frame.size = size(forChildContentContainer: presentedViewController, withParentContainerSize: containerView!.bounds.size)
+        frame.size.height -= 40
+        frame.origin.y = UIApplication.shared.statusBarFrame.height + 20
+        return frame
+    }
     func iOSNativeMailPresentationTransitionWillBegin() {
         self.interactor = (self.presentedViewController.transitioningDelegate as! PGModelViewControllerDelegate).interactor
-//        dimmingView.frame = self.containerView!.frame
-//        self.containerView?.insertSubview(dimmingView, at: 0)
         let presentedViewController = self.presentedViewController
         /// Config dimming view
         setupHandleView()
         // Constraints
-        
-        
-//        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
-//        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
         // Layout handleView
         if #available(iOS 11.0, *) {
             self.presentedView?.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
@@ -184,14 +180,11 @@ extension PGPresentationController {
     
     func setupHandleView() {
         handleView = UIView()
-        //        handleView.frame = CGRect(x: 0, y: self.containerView!.frame.size.height, width: frameOfPresentedViewInContainerView.size.width, height: 20)
         handleView.frame = CGRect(x: 0, y: 0, width: self.presentedView!.frame.size.width, height: 20)
         handleView.backgroundColor = .clear
         let lineLayer = drawHandle()
         lineLayer.position = CGPoint(x: self.handleView.bounds.width / 2, y: self.handleView.bounds.height / 2)
         handleView.layer.addSublayer(lineLayer)
-        //        let recognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(recognizer:)))
-        //        handleView.addGestureRecognizer(recognizer)
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleDrag(sender:)))
         self.handleView.addGestureRecognizer(panRecognizer)
         self.presentedView!.addSubview(handleView)
@@ -219,8 +212,9 @@ extension PGPresentationController {
     dynamic func handleDrag(sender:UIPanGestureRecognizer) {
         
         let percentThreshold:CGFloat = 0.5
-        let translation = sender.translation(in: self.containerView)
-        let verticalMovement = translation.y / self.containerView!.bounds.height
+        let translation = sender.translation(in: self.presentedView)
+        print(translation)
+        let verticalMovement = translation.y / self.presentedView!.bounds.height
         
         
         /// Why??
@@ -243,8 +237,6 @@ extension PGPresentationController {
         case .ended:
             interactor.hasStarted = false
             interactor.shouldFinish ? interactor.finish():interactor.cancel()
-//            interactor.shouldFinish ? interactor.cancel():interactor.cancel()
-            
         default:
             break
         }
@@ -256,30 +248,24 @@ extension PGPresentationController {
     var sideMenuFrame:CGRect {
         let presentedVC = self.presentedViewController as! PGModelViewController
         var frame:CGRect = .zero
+        switch traitCollection.horizontalSizeClass {
+        case .regular:
+            frame.size = CGSize(width:containerView!.frame.size.width / 3,height:containerView!.frame.size.height)
+        default:
+            frame.size = CGSize(width:containerView!.frame.size.width / 2,height:containerView!.frame.size.height)
+        }
+        
         switch presentedVC.direction {
         case .left:
-            frame.size = CGSize(width: containerView!.frame.size.width / 2, height: containerView!.frame.size.height)
+            frame.origin = CGPoint(x: 0,y: 0)
         case .right:
-            frame.origin = CGPoint(x: containerView!.frame.size.width / 2, y: 0)
-            frame.size = CGSize(width: containerView!.frame.size.width / 2, height: containerView!.frame.size.height)
+            frame.origin = CGPoint(x: containerView!.frame.size.width - frame.width, y: 0)
         }
         return frame
     }
     func sideMenuPresentationTransitionWillBegin() {
-//        self.interactor = (self.presentedViewController.transitioningDelegate as! PGModelViewControllerDelegate).interactor
         
         let presentedViewController = self.presentedViewController
-        /// Config dimming view
-        // Constraints
-//        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "V:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
-//        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(withVisualFormat: "H:[dimmingView]", options: [], metrics: nil, views: ["dimmingView":dimmingView]))
-        // Layout handleView
-//        if #available(iOS 11.0, *) {
-//            self.presentedView?.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
-//        } else {
-//            // Fallback on earlier versions
-//            //            drawTopCornerRadius()
-//        }
         guard let coordinator = presentedViewController.transitionCoordinator else {
             commonPresentationBegin()
             
