@@ -5,7 +5,7 @@
 //  Created by Patrick Gao on 14/2/18.
 //
 
-import Foundation
+import UIKit
 
 /// Presentation
 class PresentedViewControllerAnimator : NSObject {
@@ -18,6 +18,7 @@ class PresentedViewControllerAnimator : NSObject {
     }
 }
 
+/// Side menu presentation animator
 class SideMenuPresentationAnimator:PresentedViewControllerAnimator {
 }
 
@@ -27,14 +28,9 @@ extension SideMenuPresentationAnimator:UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-//        guard let fromView = transitionContext.view(forKey: .from) // from view
-//            else {
-//                return
-//        }
         let containerView = transitionContext.containerView // Container View
         
         // Set up frames for animations
-//        let containerFrame = containerView.frame
         var presentedViewStartFrame = CGRect(x: 0, y: -containerView.frame.size.width / 2, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
         var presentedViewFinalFrame = CGRect(x: 0, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
         switch presentedVC.direction {
@@ -56,6 +52,32 @@ extension SideMenuPresentationAnimator:UIViewControllerAnimatedTransitioning {
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
         )
+    }
+}
+
+/// Notification Presentation Animator
+class NotificationPresentationAnimator:PresentedViewControllerAnimator {}
+extension NotificationPresentationAnimator:UIViewControllerAnimatedTransitioning {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return self.transitionDuration
+    }
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        var presentedViewStartFrame:CGRect = .zero
+        var presentedViewFinalFrame:CGRect = .zero
+        switch presentedVC.traitCollection.horizontalSizeClass {
+        case .regular:
+            presentedViewStartFrame = CGRect(x: containerView.frame.size.width / 2 - 100, y: 40, width: 0, height: 0)
+            presentedViewFinalFrame = CGRect(x: containerView.frame.size.width / 2 - 100, y: 40, width: 200, height: 70)
+        default:
+            presentedViewStartFrame = CGRect(x: 10, y: 40, width: 0, height: 0)
+            presentedViewFinalFrame = CGRect(x: 10, y: 40, width: containerView.frame.size.width - 20, height: 70)
+        }
+        presentedVC.view.frame = presentedViewStartFrame
+        containerView.addSubview(presentedVC.view)
+        UIView.animate(withDuration: self.transitionDuration(using: transitionContext)) {
+            self.presentedVC.view.frame = presentedViewFinalFrame
+        }
     }
 }
 
@@ -114,18 +136,14 @@ extension SideMenuDismissAnimator:UIViewControllerAnimatedTransitioning {
         let containerView = transitionContext.containerView // Container View
         
         // Set up frames for animations
-        //        let containerFrame = containerView.frame
         var presentedViewFinalFrame = CGRect(x: 0, y: -containerView.frame.size.width / 2, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
-//        var presentedViewStartFrame = CGRect(x: 0, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
         let presentedViewStartFrame = self.presentedVC.view.frame
         print(presentedViewStartFrame)
         switch presentedVC.direction {
         case .left:
             presentedViewFinalFrame = CGRect(x: -presentedViewStartFrame.size.width, y:0 , width: presentedViewStartFrame.size.width, height: presentedViewStartFrame.size.height)
-//            presentedViewStartFrame = CGRect(x: 0, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
         case .right:
             presentedViewFinalFrame = CGRect(x: containerView.frame.size.width, y: 0, width: presentedViewStartFrame.size.width, height: presentedViewStartFrame.size.height)
-//            presentedViewStartFrame = CGRect(x: containerView.frame.size.width / 2, y: 0, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
         }
         presentedVC.view.frame = presentedViewStartFrame
         UIView.animate(
@@ -137,5 +155,20 @@ extension SideMenuDismissAnimator:UIViewControllerAnimatedTransitioning {
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
         )
+    }
+}
+
+/// Notification dismiss animation
+class NotificationDismissalAnimator:DismissedViewControllerAnimator {}
+
+extension NotificationDismissalAnimator:UIViewControllerAnimatedTransitioning {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return self.transitionDuration
+    }
+    
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        UIView.animate(withDuration: self.transitionDuration(using: transitionContext)) {
+            self.presentedVC.view.alpha = 0
+        }
     }
 }

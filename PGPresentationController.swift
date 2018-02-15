@@ -10,34 +10,34 @@ import UIKit
 
 public class PGPresentationController: UIPresentationController {
     
-    fileprivate var dimmingView:UIView!
+    fileprivate var dimmingView:UIView?
     fileprivate var handleView:UIView!
     fileprivate var interactor:Interactor!
+    fileprivate weak var dismissalTimer:Timer?
     
     
     override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
         super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
-        setupDimmingView()
+        
     }
     
     /// When the transition will begin
     override public func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
-        dimmingView.frame = self.containerView!.frame
-        self.containerView?.insertSubview(dimmingView, at: 0)
-        self.dimmingView.leadingAnchor.constraint(equalTo: containerView!.leadingAnchor).isActive = true
-        self.dimmingView.trailingAnchor.constraint(equalTo: containerView!.trailingAnchor).isActive = true
-        self.dimmingView.topAnchor.constraint(equalTo: containerView!.topAnchor).isActive = true
-        self.dimmingView.bottomAnchor.constraint(equalTo: containerView!.bottomAnchor).isActive = true
-        
+        let presentedVC = presentedViewController as! PGModelViewController
+        if presentedVC.showDimmingView {
+            setupDimmingView()
+        }
         let pgPresentedVC = self.presentedViewController as! PGModelViewController
         switch pgPresentedVC.presentationStyle {
         case .iOSNativeMail:
             iOSNativeMailPresentationTransitionWillBegin()
         case .sideMenu:
             sideMenuPresentationTransitionWillBegin()
+        default:break
         }
     }
+    
     
     override public func dismissalTransitionWillBegin() {
         super.dismissalTransitionWillBegin()
@@ -50,13 +50,14 @@ public class PGPresentationController: UIPresentationController {
                 iOSNativeMailDismissalTransitionWillBegin()
             case .sideMenu:
                 sideMenuDismissalTransitionWillBegin()
+            default:break
             }
 
             return
         }
         
         coordinator.animate(alongsideTransition: { _ in
-            self.dimmingView.alpha = 0
+            self.dimmingView!.alpha = 0
             self.presentedView?.layer.cornerRadius = 0
             //            self.handleView.frame.origin.y = self.containerView!.frame.size.height
             self.presentingViewController.view!.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
@@ -66,7 +67,12 @@ public class PGPresentationController: UIPresentationController {
     
     override public func presentationTransitionDidEnd(_ completed: Bool) {
         if (!completed) {
-            self.dimmingView.removeFromSuperview()
+//            if dimmingView
+            self.dimmingView?.removeFromSuperview()
+        }
+        let presentedVC = self.presentedViewController as! PGModelViewController
+        if presentedVC.presentationStyle == .notification {
+            
         }
     }
     
@@ -91,11 +97,19 @@ public class PGPresentationController: UIPresentationController {
 fileprivate extension PGPresentationController {
     func setupDimmingView() {
         dimmingView = UIView()
-        dimmingView.translatesAutoresizingMaskIntoConstraints = false
-        dimmingView.backgroundColor = UIColor(white: 0, alpha: 0.5)
-        dimmingView.alpha = 0
+        dimmingView!.translatesAutoresizingMaskIntoConstraints = false
+        dimmingView!.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        dimmingView!.alpha = 0
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(recognizer:)))
-        dimmingView.addGestureRecognizer(recognizer)
+        dimmingView!.addGestureRecognizer(recognizer)
+        
+        
+        dimmingView!.frame = self.containerView!.frame
+        self.containerView?.insertSubview(dimmingView!, at: 0)
+        self.dimmingView!.leadingAnchor.constraint(equalTo: containerView!.leadingAnchor).isActive = true
+        self.dimmingView!.trailingAnchor.constraint(equalTo: containerView!.trailingAnchor).isActive = true
+        self.dimmingView!.topAnchor.constraint(equalTo: containerView!.topAnchor).isActive = true
+        self.dimmingView!.bottomAnchor.constraint(equalTo: containerView!.bottomAnchor).isActive = true
         
     }
     
@@ -114,15 +128,19 @@ fileprivate extension PGPresentationController {
     }
     
     func commonPresentationBegin() {
-        self.dimmingView.alpha = 1
+        if self.dimmingView != nil {
+            self.dimmingView!.alpha = 1
+        }
+        
         self.presentingViewController.view!.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
         UIApplication.shared.statusBarStyle = .lightContent
     }
     
     func commonDismissalBegin() {
-        dimmingView.alpha = 0
-        self.presentedView?.layer.cornerRadius = 0
-        UIApplication.shared.statusBarStyle = .default
+        if self.dimmingView != nil {
+            dimmingView!.alpha = 0
+        }
+        
     }
     
 }
@@ -168,13 +186,13 @@ extension PGPresentationController {
     func iOSNativeMailDismissalTransitionWillBegin() {
         guard let coordinator = presentedViewController.transitionCoordinator else {
             commonDismissalBegin()
-            self.presentedView?.layer.cornerRadius = 10
+            self.presentedView?.layer.cornerRadius = 0
             return
         }
         
         coordinator.animate(alongsideTransition: { _ in
             self.commonDismissalBegin()
-            self.presentedView?.layer.cornerRadius = 10
+            self.presentedView?.layer.cornerRadius = 0
         })
     }
     
@@ -287,5 +305,35 @@ extension PGPresentationController {
         coordinator.animate(alongsideTransition: { _ in
             self.commonDismissalBegin()
         })
+    }
+}
+
+// MARK: - Notification
+extension PGPresentationController {
+    var notificationFrame:CGRect {
+        let presentedVC = self.presentedViewController as! PGModelViewController
+        if let frame = presentedVC.notificationFrame {
+            return frame
+        }
+        var frame = CGRect(x: 0, y: 0, width: containerView!.frame.size.width, height: 80)
+        if traitCollection.horizontalSizeClass == .regular {
+            frame = CGRect(x: 0, y: 0, width: 200, height: 80)
+        }
+        return frame
+    }
+    func NotificationPresentationTransitionDidEnd () {
+        if #available(iOS 10.0, *) {
+            dismissalTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { (timer) in
+                self.presentedViewController.dismiss(animated: true, completion: nil)
+            })
+        } else {
+            // Fallback on earlier versions
+            
+            dismissalTimer = Timer(timeInterval: 5.0, target: self, selector: #selector(self.dismissAction), userInfo: nil, repeats: false)
+            
+        }
+    }
+    @objc func dismissAction() {
+        self.presentedViewController.dismiss(animated: true, completion: nil)
     }
 }

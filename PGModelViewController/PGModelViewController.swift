@@ -15,9 +15,21 @@ open class PGModelViewController: UIViewController {
     public enum PresentationStyle {
         case iOSNativeMail
         case sideMenu
+        case notification
     }
-    public var presentationStyle = PresentationStyle.iOSNativeMail
+    public var presentationStyle:PresentationStyle = .iOSNativeMail {
+        didSet( newPresentationStyle ) {
+            switch newPresentationStyle{
+            case .notification:
+                self.showDimmingView = false
+            default:break
+            }
+        }
+    }
     public var direction = PresentationDirection.left
+    public var notificationFrame:CGRect?
+    public var showDimmingView = true
+    
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)

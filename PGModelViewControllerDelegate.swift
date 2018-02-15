@@ -28,9 +28,11 @@ extension PGModelViewControllerDelegate:UIViewControllerTransitioningDelegate {
         switch presentedVC.presentationStyle {
         case .sideMenu:
             return SideMenuPresentationAnimator(forPresented: presented)
-        default:
-            return nil
-        }
+        case .notification:
+            return NotificationPresentationAnimator(forPresented: presented)
+//        default:
+//            return nil
+//        }
         
     }
     
@@ -41,7 +43,12 @@ extension PGModelViewControllerDelegate:UIViewControllerTransitioningDelegate {
             return iOSNativeMailDismissAnimator(forDismissed:dismissed)
         case .sideMenu:
             return SideMenuDismissAnimator(forDismissed: dismissed)
-        }
+        case .notification:
+            return NotificationDismissalAnimator(forDismissed: dismissed)
+//        default:
+//            return nil
+//        }
+        
         
     }
 }
