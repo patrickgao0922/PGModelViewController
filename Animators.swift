@@ -10,11 +10,18 @@ import UIKit
 /// Presentation
 class PresentedViewControllerAnimator : NSObject {
     var presentedVC:PGModelViewController!
-    var transitionDuration:TimeInterval!
+    var transitionDuration:TimeInterval{
+            if let duration = presentedVC.transitionDuration {
+                return duration
+            }
+        return 0.3
+            
+        
+    }
     
     init(forPresented presented:UIViewController) {
         self.presentedVC = presented as! PGModelViewController
-        self.transitionDuration = 0.3
+        
     }
 }
 

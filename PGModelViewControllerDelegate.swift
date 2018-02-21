@@ -30,9 +30,9 @@ extension PGModelViewControllerDelegate:UIViewControllerTransitioningDelegate {
             return SideMenuPresentationAnimator(forPresented: presented)
         case .notification:
             return NotificationPresentationAnimator(forPresented: presented)
-//        default:
-//            return nil
-//        }
+        default:
+            return nil
+        }
         
     }
     
@@ -47,7 +47,7 @@ extension PGModelViewControllerDelegate:UIViewControllerTransitioningDelegate {
             return NotificationDismissalAnimator(forDismissed: dismissed)
 //        default:
 //            return nil
-//        }
+        }
         
         
     }

@@ -16,6 +16,7 @@ class ViewController: UIViewController {
         case iosNativeMail = "showIOSNatvieMailStyle"
         case sideMenu = "showSideMenuStyle"
         case sideMenuRight = "showSideMenuStyle(Right)"
+        case notification = "NotificationViewController"
     }
     
     var pgModelViewControllerDelegate:PGModelViewControllerDelegate!
@@ -51,6 +52,11 @@ class ViewController: UIViewController {
             controller.transitioningDelegate = pgModelViewControllerDelegate
             controller.presentationStyle = .sideMenu
             controller.direction = .right
+        case .notification:
+            let controller = segue.destination as! NotificationViewController
+            controller.transitioningDelegate = pgModelViewControllerDelegate
+            controller.presentationStyle = .notification
+            controller.transitionDuration = 0.6
         }
         
     }

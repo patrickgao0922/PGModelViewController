@@ -34,7 +34,9 @@ public class PGPresentationController: UIPresentationController {
             iOSNativeMailPresentationTransitionWillBegin()
         case .sideMenu:
             sideMenuPresentationTransitionWillBegin()
-        default:break
+        case .notification:
+            notificationPresentationTransitionWillBegin()
+            //        default:break
         }
     }
     
@@ -52,7 +54,7 @@ public class PGPresentationController: UIPresentationController {
                 sideMenuDismissalTransitionWillBegin()
             default:break
             }
-
+            
             return
         }
         
@@ -67,12 +69,12 @@ public class PGPresentationController: UIPresentationController {
     
     override public func presentationTransitionDidEnd(_ completed: Bool) {
         if (!completed) {
-//            if dimmingView
+            //            if dimmingView
             self.dimmingView?.removeFromSuperview()
         }
         let presentedVC = self.presentedViewController as! PGModelViewController
         if presentedVC.presentationStyle == .notification {
-            
+            self.NotificationPresentationTransitionDidEnd()
         }
     }
     
@@ -86,6 +88,8 @@ public class PGPresentationController: UIPresentationController {
         {
         case .sideMenu:
             return sideMenuFrame
+        case .notification:
+            return notificationFrame
         default:
             
             return iOSNativeMailFrame
@@ -310,16 +314,43 @@ extension PGPresentationController {
 
 // MARK: - Notification
 extension PGPresentationController {
-    var notificationFrame:CGRect {
+    
+    var notificationContainerFrame:CGRect{
         let presentedVC = self.presentedViewController as! PGModelViewController
         if let frame = presentedVC.notificationFrame {
             return frame
         }
-        var frame = CGRect(x: 0, y: 0, width: containerView!.frame.size.width, height: 80)
+        var frame = CGRect(x: 10, y: UIApplication.shared.statusBarFrame.size.height, width: containerView!.frame.size.width - 20, height: 70)
         if traitCollection.horizontalSizeClass == .regular {
-            frame = CGRect(x: 0, y: 0, width: 200, height: 80)
+            frame = CGRect(x: containerView!.frame.size.width / 2 - 100, y: UIApplication.shared.statusBarFrame.size.height, width: 200, height: 70)
         }
         return frame
+    }
+    
+    var notificationFrame:CGRect {
+        let presentedVC = self.presentedViewController as! PGModelViewController
+        if let frame = presentedVC.notificationFrame {
+            return CGRect(origin: .zero, size: frame.size)
+        }
+        var frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width - 20, height: 70)
+        if traitCollection.horizontalSizeClass == .regular {
+            frame = CGRect(x: 0, y: 0, width: 200, height: 70)
+        }
+        return frame
+    }
+    func notificationPresentationTransitionWillBegin() {
+        
+        let presentedViewController = self.presentedViewController as! PGModelViewController
+        self.containerView!.frame = self.notificationContainerFrame
+        guard let coordinator = presentedViewController.transitionCoordinator else {
+            commonPresentationBegin()
+            
+            return
+        }
+        
+        coordinator.animate(alongsideTransition: { _ in
+            self.commonPresentationBegin()
+        })
     }
     func NotificationPresentationTransitionDidEnd () {
         if #available(iOS 10.0, *) {

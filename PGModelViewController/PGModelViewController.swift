@@ -29,6 +29,7 @@ open class PGModelViewController: UIViewController {
     public var direction = PresentationDirection.left
     public var notificationFrame:CGRect?
     public var showDimmingView = true
+    public var transitionDuration:TimeInterval?
     
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
