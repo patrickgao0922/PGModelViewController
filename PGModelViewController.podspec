@@ -27,11 +27,13 @@ TODO: Add long description of the pod here.
   s.author           = { 'patrickgao0922@gmail.com' => 'patrickgao0922@gmail.com' }
   s.source           = { :git => 'https://github.com/patrickgao0922/PGModelViewController.git', :tag => s.version }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.swift_version = '4.0'
 
   s.ios.deployment_target = '9.0'
 
-s.source_files = 'PGModelViewController/Classes/**/*.{m,h,swift}'
-  
+#s.source_files = 'PGModelViewController/Classes/**/*.{m,h,swift}'
+s.source_files = 'PGModelViewController/*.{m,h,swift}'
+
   # s.resource_bundles = {
   #   'PGModelViewController' => ['PGModelViewController/Assets/*.png']
   # }
