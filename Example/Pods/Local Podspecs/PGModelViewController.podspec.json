@@ -1,9 +1,9 @@
 {
   "name": "PGModelViewController",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "summary": "A short description of PGModelViewController.",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/patrickgao0922@gmail.com/PGModelViewController",
+  "homepage": "https://github.com/patrickgao0922/PGModelViewController",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -12,11 +12,12 @@
     "patrickgao0922@gmail.com": "patrickgao0922@gmail.com"
   },
   "source": {
-    "git": "https://github.com/patrickgao0922@gmail.com/PGModelViewController.git",
-    "tag": "0.1.0"
+    "git": "https://github.com/patrickgao0922/PGModelViewController.git",
+    "tag": "0.1.2"
   },
+  "swift_version": "4.0",
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.0"
   },
-  "source_files": "PGModelViewController/Classes/**/*"
+  "source_files": "PGModelViewController/*.{m,h,swift}"
 }

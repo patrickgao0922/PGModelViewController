@@ -10,7 +10,7 @@ PODS:
   - Nimble-Snapshots/Core (6.3.0):
     - FBSnapshotTestCase (~> 2.0)
     - Nimble (~> 7.0)
-  - PGModelViewController (0.1.0)
+  - PGModelViewController (0.1.2)
   - Quick (1.2.0)
 
 DEPENDENCIES:
@@ -20,17 +20,24 @@ DEPENDENCIES:
   - PGModelViewController (from `../`)
   - Quick (~> 1.2.0)
 
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - FBSnapshotTestCase
+    - Nimble
+    - Nimble-Snapshots
+    - Quick
+
 EXTERNAL SOURCES:
   PGModelViewController:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
   Nimble-Snapshots: f5459b5b091678dc942d03ec4741cacb58ba4a52
-  PGModelViewController: b44d01fe0a0b75196799ffccf77e1722b92d3f84
+  PGModelViewController: 71088322a8414fcbb1736afced7d7e0682e4573a
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
 
 PODFILE CHECKSUM: 00dc2d7556caea9107fec7a70004b6a8e2803b5c
 
-COCOAPODS: 1.4.0
+COCOAPODS: 1.5.0
