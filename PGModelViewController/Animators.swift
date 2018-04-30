@@ -145,7 +145,6 @@ extension SideMenuDismissAnimator:UIViewControllerAnimatedTransitioning {
         // Set up frames for animations
         var presentedViewFinalFrame = CGRect(x: 0, y: -containerView.frame.size.width / 2, width: containerView.frame.size.width / 2, height: containerView.frame.size.height)
         let presentedViewStartFrame = self.presentedVC.view.frame
-        print(presentedViewStartFrame)
         switch presentedVC.direction {
         case .left:
             presentedViewFinalFrame = CGRect(x: -presentedViewStartFrame.size.width, y:0 , width: presentedViewStartFrame.size.width, height: presentedViewStartFrame.size.height)

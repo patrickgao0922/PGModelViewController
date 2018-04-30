@@ -137,13 +137,13 @@ fileprivate extension PGPresentationController {
         }
         
         self.presentingViewController.view!.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-        UIApplication.shared.statusBarStyle = .lightContent
     }
     
     func commonDismissalBegin() {
         if self.dimmingView != nil {
             dimmingView!.alpha = 0
         }
+        
         
     }
     
@@ -235,7 +235,6 @@ extension PGPresentationController {
         
         let percentThreshold:CGFloat = 0.5
         let translation = sender.translation(in: self.presentedView)
-        print(translation)
         let verticalMovement = translation.y / self.presentedView!.bounds.height
         
         
